@@ -1,21 +1,54 @@
-// створи екземпляр SimpleLightbox для роботи з модальним вікном
-// та зберігай функції для відображення елементів інтерфейсу:
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-function createGallery(images) {}
-// Ця функція повинна приймати масив images, створювати HTML-розмітку для галереї,
-// додавати її в контейнер галереї та викликати метод екземпляра SimpleLightbox refresh().
-// Нічого не повертає.
+const gallery = new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+});
 
-function clearGallery() {}
-// Ця функція нічого не приймає та повинна очищати вміст контейнера галереї.
-// Нічого не повертає.
+const galleryList = document.querySelector('.gallery');
+const loader = document.querySelector('.loader');
 
-function showLoader() {}
-// Ця функція нічого не приймає, повинна додавати клас для відображення лоадера.
-//  Нічого не повертає.
+function createGallery(images) {
+  const markup = images
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => `
+        <li class="gallery-item">
+          <a class="gallery-link" href="${largeImageURL}">
+            <img class="gallery-image" src="${webformatURL}" alt="${tags}" loading="lazy" />
+          </a>
+          <div class="info">
+            <p class="info-item"><b>Likes</b><br>${likes}</p>
+            <p class="info-item"><b>Views</b><br>${views}</p>
+            <p class="info-item"><b>Comments</b><br>${comments}</p>
+            <p class="info-item"><b>Downloads</b><br>${downloads}</p>
+          </div>
+        </li>
+      `
+    )
+    .join('');
 
-function hideLoader() {}
-// Ця функція нічого не приймає, повинна прибирати клас для відображення лоадера.
-// Нічого не повертає.
+  galleryList.insertAdjacentHTML('beforeend', markup);
+  gallery.refresh();
+}
+
+function clearGallery() {
+  galleryList.innerHTML = '';
+}
+
+function showLoader() {
+  loader.classList.remove('hidden');
+}
+
+function hideLoader() {
+  loader.classList.add('hidden');
+}
 
 export { createGallery, clearGallery, showLoader, hideLoader };
